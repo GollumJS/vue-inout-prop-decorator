@@ -1,5 +1,11 @@
 # InOut typescript decorator for vuejs component 
 
+## Install:
+
+```
+npm install --save vue-inout-prop-decorator
+```
+
 ## Exemple use:
 
 ### child component
