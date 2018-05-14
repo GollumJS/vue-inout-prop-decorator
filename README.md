@@ -9,7 +9,7 @@
 	<div>
 		<p>Value1: {{ value1 }}</p>
 		<p>Value2: {{ value2 }}</p>
-		<button change="change" ></button>
+		<button @click="change" ></button>
 	</div>
 </template>
 

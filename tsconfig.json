@@ -1,0 +1,19 @@
+
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "commonjs",
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"sourceMap": true,
+		"experimentalDecorators": true,
+		"lib": [
+			"es5",
+			"ScriptHost",
+			"DOM",
+		]
+	},
+	"files": [
+		"index.ts"
+	]
+}
