@@ -1,14 +1,14 @@
 {
   "name": "vue-inout-prop-decorator",
-  "version": "1.0.4",
-  "description": "Add InOut property annotaion for vuejs in Typscript mode",
+  "version": "1.0.5",
+  "description": "Add InOut property annotation for vuejs in Typscript mode",
   "main": "index.js",
   "scripts": {
     "build": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Smeagolworms4/vue-inout-prop-decorator.git"
+    "url": "git+https://github.com/GollumJS/vue-inout-prop-decorator.git"
   },
   "keywords": [
     "in",
@@ -24,9 +24,9 @@
   "author": "Damien Duboeuf <smeagolworms4@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Smeagolworms4/vue-inout-prop-decorator/issues"
+    "url": "https://github.com/GollumJS/vue-inout-prop-decorator/issues"
   },
-  "homepage": "https://github.com/Smeagolworms4/vue-inout-prop-decorator#readme",
+  "homepage": "https://github.com/GollumJS/vue-inout-prop-decorator#readme",
   "dependencies": {
     "vue": "^2.5.16",
     "vue-property-decorator": "^6.0.0"
