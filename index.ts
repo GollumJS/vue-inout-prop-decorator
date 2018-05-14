@@ -7,11 +7,6 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 	const callbackProp = Prop(optionsProp);
 	const callbackInOut = createDecorator((options, key) => {
 		
-		if (!options.computed) {
-			options.computed = {};
-		}
-		
-		
 		const mounted = options['mounted'] ? options['mounted'] :function() {};
 		options['mounted'] = function(...args: any[]): void {
 			

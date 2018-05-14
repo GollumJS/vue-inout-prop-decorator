@@ -6,7 +6,7 @@
 npm install --save vue-inout-prop-decorator
 ```
 
-## Exemple use:
+## Exemple with InOut annotation:
 
 ### child component
 
@@ -20,7 +20,7 @@ npm install --save vue-inout-prop-decorator
 </template>
 
 <script lang="ts">
-	import {Component} from 'vue-property-decorator';
+	import {Component, Vue} from 'vue-property-decorator';
 	import {InOut} from "vue-inout-prop-decorator";
 	
 	@Component
@@ -49,7 +49,7 @@ npm install --save vue-inout-prop-decorator
 </template>
 
 <script lang="ts">
-	import {Component} from 'vue-property-decorator';
+	import {Component, Vue} from 'vue-property-decorator';
 	import MyChild from './MyChild.vue';
 	
 	@Component({
@@ -59,6 +59,49 @@ npm install --save vue-inout-prop-decorator
 	})
 	export default class ParentComponent extends Vue {
 		value: string = 'hello';		
+	}
+</script>
+```
+
+## Exemple WITHOUT InOut annotation:
+
+
+```html
+<template>
+	<div>
+		<p>Value1: {{ value1_val }}</p>
+		<p>Value2: {{ value2_val }}</p>
+		<button @click="change" ></button>
+	</div>
+</template>
+
+<script lang="ts">
+	import {Component, Prop, Vue} from 'vue-property-decorator';
+	import {InOut} from "vue-inout-prop-decorator";
+	
+	@Component
+	export default class ParentComponent extends Vue {
+		
+		@Prop() value1: string;
+		@Prop({ type: String, default: "World" }) value2: string;
+		
+		change() {
+			this.updateValue1("Ho ho ho!");
+			this.updateValue2("Ha ha ha!");
+		}
+		
+		value1_val: string = null;
+		value2_val: string = null;
+		
+		mounted() {
+			this.value1_val = this.value1;
+			this.value2_val = this.value2;
+		}
+		
+		@Emit('update:value1')updateValue1(value:  boolean) { this.value1_val = value; }
+		@Emit('update:value2')updateValue1(value:  boolean) { this.value2_val = value; }
+		
+		
 	}
 </script>
 ```

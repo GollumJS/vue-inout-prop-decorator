@@ -5,9 +5,6 @@ var vue_property_decorator_1 = require("vue-property-decorator");
 exports.InOut = function (optionsProp) {
     var callbackProp = vue_property_decorator_1.Prop(optionsProp);
     var callbackInOut = vue_class_component_1.createDecorator(function (options, key) {
-        if (!options.computed) {
-            options.computed = {};
-        }
         var mounted = options['mounted'] ? options['mounted'] : function () { };
         options['mounted'] = function () {
             var args = [];
