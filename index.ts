@@ -10,14 +10,12 @@ const recursiveForceUpdate = (vm: any) => {
 const callWatch = (component: Vue, expression: string, value: any): void => {
 	if (component['_watchers']) {
 		component['_watchers']
-			.filter(w => w.expression === expression).
-			forEach(w => {
-				if (w.value != value) {
-					w.cb(value, w.value);
-					w.dirty = false;
-					w.value = value;
-				}
-			});
+			.forEach(w => w.update());
+		;
+	}
+	if (component['_computedWatchers']) {
+		Object.keys(component['_computedWatchers']).
+			forEach(key => component['_computedWatchers'][key].update());
 		;
 	}
 };

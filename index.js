@@ -9,14 +9,12 @@ var recursiveForceUpdate = function (vm) {
 var callWatch = function (component, expression, value) {
     if (component['_watchers']) {
         component['_watchers']
-            .filter(function (w) { return w.expression === expression; }).
-            forEach(function (w) {
-            if (w.value != value) {
-                w.cb(value, w.value);
-                w.dirty = false;
-                w.value = value;
-            }
-        });
+            .forEach(function (w) { return w.update(); });
+        ;
+    }
+    if (component['_computedWatchers']) {
+        Object.keys(component['_computedWatchers']).
+            forEach(function (key) { return component['_computedWatchers'][key].update(); });
         ;
     }
 };
