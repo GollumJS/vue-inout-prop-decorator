@@ -2,6 +2,11 @@ import { createDecorator } from 'vue-class-component'
 import { PropOptions, Constructor } from 'vue/types/options';
 import {Prop} from 'vue-property-decorator';
 
+const recursiveForceUpdate = (vm: any) => {
+	vm.$forceUpdate();
+	vm.$children.forEach(c => recursiveForceUpdate(c));
+};
+
 export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Constructor)): PropertyDecorator {
 	
 	const callbackProp = Prop(optionsProp);
@@ -22,7 +27,7 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				set: function(value: any) {
 					set.call(this, value);
 					self['$data'][key+'_value'] = value;
-					self['$forceUpdate']();
+					recursiveForceUpdate(self);
 				}
 			});
 			
@@ -35,7 +40,7 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				set: function(value: any) {
 					this['$data'][key+'_value'] = value;
 					this['$emit']('update:'+key, value);
-					this['$forceUpdate']();
+					recursiveForceUpdate(this);
 				}
 			});
 			mounted.apply(this, args);
