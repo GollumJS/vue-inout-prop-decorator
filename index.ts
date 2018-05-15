@@ -22,6 +22,7 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				set: function(value: any) {
 					set.call(this, value);
 					self['$data'][key+'_value'] = value;
+					self['$forceUpdate']();
 				}
 			});
 			
