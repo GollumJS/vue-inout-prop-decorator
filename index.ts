@@ -1,10 +1,25 @@
 import { createDecorator } from 'vue-class-component'
 import { PropOptions, Constructor } from 'vue/types/options';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Vue} from 'vue-property-decorator';
 
 const recursiveForceUpdate = (vm: any) => {
 	vm.$forceUpdate();
 	vm.$children.forEach(c => recursiveForceUpdate(c));
+};
+
+const callWatch = (component: Vue, expression: string, value: any): void => {
+	if (component['_watchers']) {
+		component['_watchers']
+			.filter(w => w.expression === expression).
+			forEach(w => {
+				if (w.value != value) {
+					w.cb(value, w.value);
+					w.dirty = false;
+					w.value = value;
+				}
+			});
+		;
+	}
 };
 
 export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Constructor)): PropertyDecorator {
@@ -27,7 +42,8 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				set: function(value: any) {
 					set.call(this, value);
 					self['$data'][key+'_value'] = value;
-					recursiveForceUpdate(self);
+					callWatch(<Vue>self, key, value);
+					recursiveForceUpdate(<Vue>self);
 				}
 			});
 			
@@ -39,8 +55,9 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				},
 				set: function(value: any) {
 					this['$data'][key+'_value'] = value;
+					callWatch(<Vue>this, key, value);
 					this['$emit']('update:'+key, value);
-					recursiveForceUpdate(this);
+					recursiveForceUpdate(<Vue>this);
 				}
 			});
 			mounted.apply(this, args);
