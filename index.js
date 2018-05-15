@@ -2,6 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_class_component_1 = require("vue-class-component");
 var vue_property_decorator_1 = require("vue-property-decorator");
+var recursiveForceUpdate = function (vm) {
+    vm.$forceUpdate();
+    vm.$children.forEach(function (c) { return recursiveForceUpdate(c); });
+};
+var callWatch = function (component, expression, value) {
+    if (component['_watchers']) {
+        component['_watchers']
+            .filter(function (w) { return w.expression === expression; }).
+            forEach(function (w) {
+            if (w.value != value) {
+                w.cb(value, w.value);
+                w.dirty = false;
+                w.value = value;
+            }
+        });
+        ;
+    }
+};
 exports.InOut = function (optionsProp) {
     var callbackProp = vue_property_decorator_1.Prop(optionsProp);
     var callbackInOut = vue_class_component_1.createDecorator(function (options, key) {
@@ -22,6 +40,8 @@ exports.InOut = function (optionsProp) {
                 set: function (value) {
                     set.call(this, value);
                     self['$data'][key + '_value'] = value;
+                    callWatch(self, key, value);
+                    recursiveForceUpdate(self);
                 }
             });
             this['$data'][key + '_value'] = this[key];
@@ -31,8 +51,9 @@ exports.InOut = function (optionsProp) {
                 },
                 set: function (value) {
                     this['$data'][key + '_value'] = value;
+                    callWatch(this, key, value);
                     this['$emit']('update:' + key, value);
-                    this['$forceUpdate']();
+                    recursiveForceUpdate(this);
                 }
             });
             mounted.apply(this, args);
