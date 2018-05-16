@@ -7,12 +7,12 @@ var recursiveForceUpdate = function (vm) {
     vm.$children.forEach(function (c) { return recursiveForceUpdate(c); });
 };
 var callWatch = function (component, expression, value) {
-    if (component['_watchers']) {
+    if (typeof component['_watchers'] !== 'undefined') {
         component['_watchers']
             .forEach(function (w) { return w.update(); });
         ;
     }
-    if (component['_computedWatchers']) {
+    if (typeof component['_computedWatchers'] !== 'undefined') {
         Object.keys(component['_computedWatchers']).
             forEach(function (key) { return component['_computedWatchers'][key].update(); });
         ;
