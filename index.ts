@@ -8,12 +8,12 @@ const recursiveForceUpdate = (vm: any) => {
 };
 
 const callWatch = (component: Vue, expression: string, value: any): void => {
-	if (typeof component['_watchers'] !== 'undefined') {
+	if (component.hasOwnProperty('_watchers')) {
 		component['_watchers']
 			.forEach(w => w.update());
 		;
 	}
-	if (typeof component['_computedWatchers'] !== 'undefined') {
+	if (component.hasOwnProperty('_computedWatchers')) {
 		Object.keys(component['_computedWatchers']).
 			forEach(key => component['_computedWatchers'][key].update());
 		;
