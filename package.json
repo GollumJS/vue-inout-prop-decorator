@@ -1,6 +1,6 @@
 {
   "name": "vue-inout-prop-decorator",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Add InOut property annotation for vuejs in Typscript mode",
   "main": "index.js",
   "scripts": {

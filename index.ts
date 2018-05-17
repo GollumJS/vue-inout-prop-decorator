@@ -15,7 +15,7 @@ const callWatch = (component: Vue, expression: string, value: any): void => {
 	}
 	if (component.hasOwnProperty('_computedWatchers')) {
 		Object.keys(component['_computedWatchers']).
-			forEach(key => component['_computedWatchers'][key].update());
+		forEach(key => component['_computedWatchers'][key].update());
 		;
 	}
 };
@@ -38,7 +38,9 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 			Object.defineProperty(this['_props'], key, {
 				configurable: true,
 				enumerable: true,
-				get: get,
+				get: function (): any {
+					return real_value;
+				},
 				set: function(value: any) {
 					set.call(this, value);
 					real_value = value;

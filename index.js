@@ -35,7 +35,9 @@ exports.InOut = function (optionsProp) {
             Object.defineProperty(this['_props'], key, {
                 configurable: true,
                 enumerable: true,
-                get: get,
+                get: function () {
+                    return real_value;
+                },
                 set: function (value) {
                     set.call(this, value);
                     real_value = value;
