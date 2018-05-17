@@ -33,26 +33,26 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 			const get = descriptor.get;
 			const set = descriptor.set;
 			
+			let real_value = this[key];
+			
 			Object.defineProperty(this['_props'], key, {
 				configurable: true,
 				enumerable: true,
 				get: get,
 				set: function(value: any) {
 					set.call(this, value);
-					self['$data'][key+'_value'] = value;
+					real_value = value;
 					callWatch(<Vue>self, key, value);
 					recursiveForceUpdate(<Vue>self);
 				}
 			});
 			
-			this['$data'][key+'_value'] = this[key];
-			
 			Object.defineProperty(this, key, {
 				get: function(): any {
-					return this['$data'][key+'_value'];
+					return real_value;
 				},
 				set: function(value: any) {
-					this['$data'][key+'_value'] = value;
+					real_value = value;
 					callWatch(<Vue>this, key, value);
 					this['$emit']('update:'+key, value);
 					recursiveForceUpdate(<Vue>this);

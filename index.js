@@ -31,24 +31,24 @@ exports.InOut = function (optionsProp) {
             var descriptor = Object.getOwnPropertyDescriptor(this['_props'], key);
             var get = descriptor.get;
             var set = descriptor.set;
+            var real_value = this[key];
             Object.defineProperty(this['_props'], key, {
                 configurable: true,
                 enumerable: true,
                 get: get,
                 set: function (value) {
                     set.call(this, value);
-                    self['$data'][key + '_value'] = value;
+                    real_value = value;
                     callWatch(self, key, value);
                     recursiveForceUpdate(self);
                 }
             });
-            this['$data'][key + '_value'] = this[key];
             Object.defineProperty(this, key, {
                 get: function () {
-                    return this['$data'][key + '_value'];
+                    return real_value;
                 },
                 set: function (value) {
-                    this['$data'][key + '_value'] = value;
+                    real_value = value;
                     callWatch(this, key, value);
                     this['$emit']('update:' + key, value);
                     recursiveForceUpdate(this);
