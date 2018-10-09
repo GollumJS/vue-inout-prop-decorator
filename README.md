@@ -1,5 +1,9 @@
 # InOut typescript decorator for vuejs component 
 
+[![Build Status](https://travis-ci.org/GollumSF/core-bundle.svg?branch=master)](https://www.npmjs.com/package/vue-inout-prop-decorator)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://www.npmjs.com/package/vue-inout-prop-decorator)
+[![NPM version](https://badge.fury.io/js/vue-inout-prop-decorator.svg)](https://www.npmjs.com/package/vue-inout-prop-decorator)
+
 ## Install:
 
 ```
