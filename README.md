@@ -93,6 +93,8 @@ npm install --save vue-inout-prop-decorator
 		value1_val: string = null;
 		value2_val: string = null;
 		
+		@Watch('value1')
+		@Watch('value2')
 		mounted() {
 			this.value1_val = this.value1;
 			this.value2_val = this.value2;
