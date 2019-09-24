@@ -105,7 +105,7 @@ npm install --save vue-inout-prop-decorator
 		}
 		
 		@Emit('update:value1')updateValue1(value:  boolean) { this.value1_val = value; }
-		@Emit('update:value2')updateValue1(value:  boolean) { this.value2_val = value; }
+		@Emit('update:value2')updateValue2(value:  boolean) { this.value2_val = value; }
 		
 		
 	}
