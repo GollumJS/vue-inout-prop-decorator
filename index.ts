@@ -26,7 +26,7 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 	const callbackInOut = createDecorator((options, key) => {
 		
 		const mounted = options['mounted'] ? options['mounted'] :function() {};
-		options['mounted'] = function(...args: any[]): void {
+		options['mounted'] = function(...args: any): void {
 			
 			const self = this;
 			const descriptor = Object.getOwnPropertyDescriptor(this['_props'], key);
@@ -64,7 +64,7 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 		};
 	});
 	
-	return function(...args: any[]) {
+	return function(...args: any) {
 		callbackProp.apply(null, args);
 		callbackInOut.apply(null, args);
 	}
