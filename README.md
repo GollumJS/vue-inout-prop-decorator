@@ -84,7 +84,7 @@ npm install --save vue-inout-prop-decorator
 	import {InOut} from "vue-inout-prop-decorator";
 	
 	@Component
-	export default class ParentComponent extends Vue {
+	export default class CustomInput extends Vue {
 		
 		@Prop() value1: string;
 		@Prop({ type: String, default: "World" }) value2: string;
@@ -111,3 +111,23 @@ npm install --save vue-inout-prop-decorator
 	}
 </script>
 ```
+
+## Exemple V-Model
+
+
+```html
+<template>
+	<div>
+		<button @click="value = 'new Val'" >Change Value</button>
+	</div>
+</template>
+
+<script lang="ts">
+	import {Component, Vue} from 'vue-property-decorator';
+	import {InOut} from "vue-inout-prop-decorator";
+	
+	@Component
+	export default class ParentComponent extends Vue {
+		@InOut({isVModel: true}) value: string;		
+	}
+</script>

@@ -18,8 +18,8 @@ var callWatch = function (component, expression, value) {
         ;
     }
 };
-exports.InOut = function (optionsProp) {
-    var callbackProp = vue_property_decorator_1.Prop(optionsProp);
+exports.InOut = function (optionsInOut) {
+    var callbackProp = vue_property_decorator_1.Prop(optionsInOut);
     var callbackInOut = vue_class_component_1.createDecorator(function (options, key) {
         var mounted = options['mounted'] ? options['mounted'] : function () { };
         options['mounted'] = function () {
@@ -52,7 +52,12 @@ exports.InOut = function (optionsProp) {
                 set: function (value) {
                     real_value = value;
                     callWatch(this, key, value);
-                    this['$emit']('update:' + key, value);
+                    if (optionsInOut && optionsInOut.isVModel === true) {
+                        this['$emit']('input', value);
+                    }
+                    else {
+                        this['$emit']('update:' + key, value);
+                    }
                     recursiveForceUpdate(this);
                 }
             });

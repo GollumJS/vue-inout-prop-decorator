@@ -20,13 +20,17 @@ const callWatch = (component: Vue, expression: string, value: any): void => {
 	}
 };
 
-export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Constructor)): PropertyDecorator {
+export interface InOutOptions extends PropOptions {
+	isVModel: boolean;
+}
+
+export const InOut = function(optionsInOut?: (InOutOptions | Constructor[] | Constructor)): PropertyDecorator {
 	
-	const callbackProp = Prop(optionsProp);
+	const callbackProp = Prop(optionsInOut);
 	const callbackInOut = createDecorator((options, key) => {
 		
 		const mounted = options['mounted'] ? options['mounted'] :function() {};
-		options['mounted'] = function(...args: any): void {
+		options['mounted'] = function(...args: any[]): void {
 			
 			const self = this;
 			const descriptor = Object.getOwnPropertyDescriptor(this['_props'], key);
@@ -56,16 +60,20 @@ export const InOut = function(optionsProp?: (PropOptions | Constructor[] | Const
 				set: function(value: any) {
 					real_value = value;
 					callWatch(<Vue>this, key, value);
-					this['$emit']('update:'+key, value);
+					if (optionsInOut && (<InOutOptions>optionsInOut).isVModel === true) {
+						this['$emit']('input', value);
+					} else {
+						this['$emit']('update:'+key, value);
+					}
 					recursiveForceUpdate(<Vue>this);
 				}
 			});
-			mounted.apply(this, args);
+			mounted.apply(this, <any>args);
 		};
 	});
 	
-	return function(...args: any) {
-		callbackProp.apply(null, args);
-		callbackInOut.apply(null, args);
+	return function(...args: any[]) {
+		callbackProp.apply(null, <any>args);
+		callbackInOut.apply(null, <any>args);
 	}
 };
