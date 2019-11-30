@@ -21,7 +21,7 @@ const callWatch = (component: Vue, expression: string, value: any): void => {
 };
 
 export interface InOutOptions extends PropOptions {
-	isVModel: boolean;
+	isVModel?: boolean;
 }
 
 export const InOut = function(optionsInOut?: (InOutOptions | Constructor[] | Constructor)): PropertyDecorator {
