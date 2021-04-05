@@ -1,27 +1,24 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_class_component_1 = require("vue-class-component");
 var vue_property_decorator_1 = require("vue-property-decorator");
-var recursiveForceUpdate = function (vm) {
-    vm.$forceUpdate();
-    vm.$children.forEach(function (c) { return recursiveForceUpdate(c); });
-};
-var callWatch = function (component, expression, value) {
-    if (component.hasOwnProperty('_watchers')) {
-        component['_watchers']
-            .forEach(function (w) { return w.update(); });
-        ;
-    }
-    if (component.hasOwnProperty('_computedWatchers')) {
-        Object.keys(component['_computedWatchers']).
-            forEach(function (key) { return component['_computedWatchers'][key].update(); });
-        ;
-    }
-};
 exports.InOut = function (optionsInOut) {
     var callbackProp = vue_property_decorator_1.Prop(optionsInOut);
     var callbackInOut = vue_class_component_1.createDecorator(function (options, key) {
+        var data = options['data'] ? options['data'] : function () { return {}; };
         var mounted = options['mounted'] ? options['mounted'] : function () { };
+        options['data'] = function () {
+            return __assign({}, data.apply(this), (_a = {}, _a[key + '_inner'] = null, _a));
+            var _a;
+        };
         options['mounted'] = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -31,34 +28,38 @@ exports.InOut = function (optionsInOut) {
             var descriptor = Object.getOwnPropertyDescriptor(this['_props'], key);
             var get = descriptor.get;
             var set = descriptor.set;
-            var real_value = this[key];
+            this[key + '_inner'] = this[key];
+            Object.defineProperty(this, key + '_original', {
+                configurable: true,
+                enumerable: true,
+                get: function () {
+                    return get;
+                }
+            });
             Object.defineProperty(this['_props'], key, {
                 configurable: true,
                 enumerable: true,
                 get: function () {
-                    return real_value;
+                    return self[key + '_inner'];
                 },
                 set: function (value) {
                     set.call(this, value);
-                    real_value = value;
-                    callWatch(self, key, value);
-                    recursiveForceUpdate(self);
+                    self[key + '_inner'] = value;
                 }
             });
             Object.defineProperty(this, key, {
                 get: function () {
-                    return real_value;
+                    return this[key + '_inner'];
                 },
                 set: function (value) {
-                    real_value = value;
-                    callWatch(this, key, value);
+                    this[key + '_inner'] = value;
                     if (optionsInOut && optionsInOut.isVModel === true) {
                         this['$emit']('input', value);
                     }
                     else {
                         this['$emit']('update:' + key, value);
                     }
-                    recursiveForceUpdate(this);
+                    this.$forceUpdate();
                 }
             });
             mounted.apply(this, args);

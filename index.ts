@@ -2,23 +2,6 @@ import { createDecorator } from 'vue-class-component'
 import { PropOptions, Constructor } from 'vue/types/options';
 import {Prop, Vue} from 'vue-property-decorator';
 
-const recursiveForceUpdate = (vm: any) => {
-	vm.$forceUpdate();
-	vm.$children.forEach(c => recursiveForceUpdate(c));
-};
-
-const callWatch = (component: Vue, expression: string, value: any): void => {
-	if (component.hasOwnProperty('_watchers')) {
-		component['_watchers']
-			.forEach(w => w.update());
-		;
-	}
-	if (component.hasOwnProperty('_computedWatchers')) {
-		Object.keys(component['_computedWatchers']).
-		forEach(key => component['_computedWatchers'][key].update());
-		;
-	}
-};
 
 export interface InOutOptions extends PropOptions {
 	isVModel?: boolean;
@@ -29,7 +12,17 @@ export const InOut = function(optionsInOut?: (InOutOptions | Constructor[] | Con
 	const callbackProp = Prop(optionsInOut);
 	const callbackInOut = createDecorator((options, key) => {
 		
+		const data: any = options['data'] ? options['data'] : function(): any { return {}; };
 		const mounted = options['mounted'] ? options['mounted'] :function() {};
+		
+		options['data'] = function() {
+			return {
+				...data.apply(this),
+				[key + '_inner']: null,
+			};
+		}
+		
+		
 		options['mounted'] = function(...args: any[]): void {
 			
 			const self = this;
@@ -37,35 +30,41 @@ export const InOut = function(optionsInOut?: (InOutOptions | Constructor[] | Con
 			const get = descriptor.get;
 			const set = descriptor.set;
 			
-			let real_value = this[key];
+			this[key + '_inner'] = this[key];
+			
+			Object.defineProperty(this, key + '_original', {
+				configurable: true,
+				enumerable: true,
+				get: function (): any {
+					return get;
+				}
+			});
+			
 			
 			Object.defineProperty(this['_props'], key, {
 				configurable: true,
 				enumerable: true,
 				get: function (): any {
-					return real_value;
+					return self[key + '_inner'];
 				},
 				set: function(value: any) {
 					set.call(this, value);
-					real_value = value;
-					callWatch(<Vue>self, key, value);
-					recursiveForceUpdate(<Vue>self);
+					self[key + '_inner'] = value;
 				}
 			});
 			
 			Object.defineProperty(this, key, {
 				get: function(): any {
-					return real_value;
+					return this[key + '_inner'];
 				},
 				set: function(value: any) {
-					real_value = value;
-					callWatch(<Vue>this, key, value);
+					this[key + '_inner'] = value;
 					if (optionsInOut && (<InOutOptions>optionsInOut).isVModel === true) {
 						this['$emit']('input', value);
 					} else {
 						this['$emit']('update:'+key, value);
 					}
-					recursiveForceUpdate(<Vue>this);
+					this.$forceUpdate();
 				}
 			});
 			mounted.apply(this, <any>args);
