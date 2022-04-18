@@ -1,23 +1,27 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InOut = void 0;
 var vue_class_component_1 = require("vue-class-component");
 var vue_property_decorator_1 = require("vue-property-decorator");
-exports.InOut = function (optionsInOut) {
-    var callbackProp = vue_property_decorator_1.Prop(optionsInOut);
-    var callbackInOut = vue_class_component_1.createDecorator(function (options, key) {
+var InOut = function (optionsInOut) {
+    var callbackProp = (0, vue_property_decorator_1.Prop)(optionsInOut);
+    var callbackInOut = (0, vue_class_component_1.createDecorator)(function (options, key) {
         var data = options['data'] ? options['data'] : function () { return {}; };
         var mounted = options['mounted'] ? options['mounted'] : function () { };
         options['data'] = function () {
-            return __assign({}, data.apply(this), (_a = {}, _a[key + '_inner'] = null, _a));
             var _a;
+            return __assign(__assign({}, data.apply(this)), (_a = {}, _a[key + '_inner'] = null, _a));
         };
         options['mounted'] = function () {
             var args = [];
@@ -74,4 +78,5 @@ exports.InOut = function (optionsInOut) {
         callbackInOut.apply(null, args);
     };
 };
+exports.InOut = InOut;
 //# sourceMappingURL=index.js.map

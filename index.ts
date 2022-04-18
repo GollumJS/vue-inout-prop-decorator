@@ -26,7 +26,7 @@ export const InOut = function(optionsInOut?: (InOutOptions | Constructor[] | Con
 		options['mounted'] = function(...args: any[]): void {
 			
 			const self = this;
-			const descriptor = Object.getOwnPropertyDescriptor(this['_props'], key);
+			const descriptor: any = Object.getOwnPropertyDescriptor(this['_props'], key);
 			const get = descriptor.get;
 			const set = descriptor.set;
 			
