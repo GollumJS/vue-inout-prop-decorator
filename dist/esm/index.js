@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InOut = void 0;
-const vue_class_component_1 = require("vue-class-component");
-const vue_property_decorator_1 = require("vue-property-decorator");
-const InOut = function (optionsInOut) {
-    const callbackProp = (0, vue_property_decorator_1.Prop)(optionsInOut);
-    const callbackInOut = (0, vue_class_component_1.createDecorator)((options, key) => {
+import { createDecorator } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+export const InOut = function (optionsInOut) {
+    const callbackProp = Prop(optionsInOut);
+    const callbackInOut = createDecorator((options, key) => {
         const data = options['data'] ? options['data'] : function () { return {}; };
         const mounted = options['mounted'] ? options['mounted'] : function () { };
         options['data'] = function () {
@@ -58,5 +55,4 @@ const InOut = function (optionsInOut) {
         callbackInOut.apply(null, args);
     };
 };
-exports.InOut = InOut;
 //# sourceMappingURL=index.js.map
